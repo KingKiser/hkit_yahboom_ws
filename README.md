@@ -16,10 +16,20 @@
 
 ---
 
+### 빌드하는 법
+
+```bash
+cd hkit_yahboom_ws
+colcon build
+```
+
+---
+
+- 워크스페이스 내부에서
+
 ### Slam 실행
 
 ```bash
-colcon build
 source install/setup.bash
 ros2 launch amr_server server_slam.launch.py
 ```
@@ -27,7 +37,6 @@ ros2 launch amr_server server_slam.launch.py
 ### Nav2 실행
 
 ```bash
-colcon build
 source install/setup.bash
 ros2 launch amr_server server_nav2.launch.py
 ```
