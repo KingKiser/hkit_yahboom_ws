@@ -1,6 +1,7 @@
 # hkit_yahboom_ws
 
 > 한국IT교육원 자율주행 피지컬 AI 반 교구제 사용 예제
+> 사용 로봇은 yahboom의 MicroROS-Pi5
 
 **Version:** v1  
 **Last Updated:** 2026.08.06  
