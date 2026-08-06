@@ -4,7 +4,7 @@ import time
 import threading
 
 """
-ORDER 用来存放命令地址和对应数据
+ORDER MCU 보드 내부에 셋팅할 값 딕셔너리 해당 딕셔너리로 메모리 접근 셋팅한다
 ORDER is used to store the command address and corresponding data
 """
 ORDER = {
@@ -140,13 +140,13 @@ class MicroROS_Robot():
         return False
 
 
-    # 恢复出厂配置
+    # 공장초기화
     def reset_factory_config(self):
         ORDER["RESET_CONFIG"][1] = 0x5F
         ORDER["RESET_CONFIG"][2] = 0x5F
         self.__send("RESET_CONFIG", len=2)
 
-    # 重启设备
+    # 로봇 재부팅으로 해당 메모리 초기화
     def reboot_device(self):    
         ORDER["REBOOT_DEVICE"][1] = 0x5F
         ORDER["REBOOT_DEVICE"][2] = 0x5F
@@ -155,8 +155,7 @@ class MicroROS_Robot():
     
     def set_wifi_config(self, ssid, passwd):
         """
-        配置WiFi信息, 输入WiFi信号名称和密码。重启生效
-        输入参数示例: ssid="ssid123", passwd="passwd123"
+        현재 연결된 와이파이와 보드가 같이 붙음 기기 외형에 있는 안테나는 아래 셋팅으로 현재 이더넷 주소와 연결됨
         """
         ssid_bytes = bytes(str(ssid), "utf-8")
         for i in range(len(ssid)):
@@ -169,8 +168,7 @@ class MicroROS_Robot():
 
     def set_udp_config(self, ip, port):
         '''
-        配置WiFi代理IP地址和端口号。重启生效
-        输入参数示例: ip=[192,168,2,116],port=8090
+        udp 설정 : ip=[192,168,2,116],port=8090
         '''
         ORDER["AGENT_IP"][1] = int(ip[0]) & 0xFF
         ORDER["AGENT_IP"][2] = int(ip[1]) & 0xFF
@@ -184,8 +182,7 @@ class MicroROS_Robot():
 
     def set_ros_serial_baudrate(self, baudrate):
         '''
-        配置ROS串口通讯波特率。重启生效
-        输入参数示例: baudrate=115200
+        보드 연결 속도 셋팅 : baudrate=115200
         '''
         value_s = bytearray(struct.pack('i', int(baudrate)))
         ORDER["SERIAL_BAUDRATE"][1] = value_s[0]
@@ -196,8 +193,8 @@ class MicroROS_Robot():
     
     def set_ros_namespace(self, ros_namespace):
         """
-        配置ROS命名空间。重启生效
-        输入参数示例: ros_namespace="robot1"
+        네임스페이스 셋팅하는 함수 다중 로봇 시 아래 해당 함수 호출
+        부분에 네임스페이스를 넣어서 셋팅할 것: ros_namespace="hkit1"
         """
         name_len = len(ros_namespace)
         if name_len > 0:
@@ -212,8 +209,7 @@ class MicroROS_Robot():
 
     def set_car_type(self, car_type):
         '''
-        配置代理方式。重启生效
-        输入参数示例:car_type=0表示虚拟机/电脑版本小车(WiFi代理方式), car_type=1表示树莓派版本小车(串口代理方式)。
+        이건 제조사 측의 차 종류 셋팅하는 것임 정확한 파라미터는 어떤 걸 쓰는지 몰?루
         '''
         ORDER["CAR_TYPE"][1] = int(car_type) & 0xFF
         ORDER["CAR_TYPE"][2] = 0
@@ -222,8 +218,8 @@ class MicroROS_Robot():
 
     def set_ros_domain_id(self, domain_id):
         '''
-        配置ROS DOMAIN ID。重启生效。
-        输入参数示例:domain_id=30。domain_id取值范围: 0 <= domain_id <= 100
+        ros domain id 셋팅 micro docker 컨테이너 생성시 이 함수에 호출되는 도메인 아이디와 일치해야
+        컨테이너와 보드가 호환됨 기본 디폴트는 20임
         '''
         if domain_id > 100:
             domain_id = 100
@@ -237,9 +233,7 @@ class MicroROS_Robot():
 
     def set_pwm_servo_offset(self, servo_id, offset):
         '''
-        配置PWM舵机偏移角度。
-        servo_id表示舵机编号, servo_id=1表示操作舵机S1, servo_id=2表示操作舵机S2。
-        offset表示调节偏差角度, offset取值范围为:[-6, 6]
+        카메라 서보모터 초기화 함수 해당 함수로 카메라 각도 초기화
         '''
         ORDER["SERVO_OFFSET"][1] = int(servo_id) & 0xFF
         ORDER["SERVO_OFFSET"][2] = int(offset) & 0xFF
@@ -249,8 +243,7 @@ class MicroROS_Robot():
 
     def set_motor_pid_parm(self, pid_p, pid_i, pid_d):
         '''
-        设置电机PID参数。
-        pid参数取值范围: [0.00, 10.00]
+        모터 PID 설정 : [0.00, 10.00]
         '''
         pid_p_s = bytearray(struct.pack('h', int(pid_p*100)))
         pid_i_s = bytearray(struct.pack('h', int(pid_i*100)))
@@ -265,8 +258,7 @@ class MicroROS_Robot():
 
     def set_imu_yaw_pid_parm(self, pid_p, pid_i, pid_d):
         '''
-        设置IMU YAW PID参数。
-        pid参数取值范围: [0.00, 10.00]
+        imu센서 PID 설정 : [0.00, 10.00]
         '''
         pid_p_s = bytearray(struct.pack('h', int(pid_p*100)))
         pid_i_s = bytearray(struct.pack('h', int(pid_i*100)))
@@ -282,7 +274,7 @@ class MicroROS_Robot():
 
     def read_wifi_ssid(self):
         '''
-        读取底板连接的WiFi信号名称
+        wifi ssid 읽기
         '''
         self.__request(ORDER["WIFI_SSID"][0])
         time.sleep(self.__read_delay)
@@ -293,7 +285,7 @@ class MicroROS_Robot():
 
     def read_wifi_passwd(self):
         '''
-        读取底板连接的WiFi密码
+        wifi passwd 읽기
         '''
         self.__request(ORDER["WIFI_PASSWD"][0])
         time.sleep(self.__read_delay)
@@ -304,7 +296,7 @@ class MicroROS_Robot():
 
     def read_agent_ip_addr(self):
         '''
-        读取底板WiFi代理的IP地址
+        agent ip 주소 로드함
         '''
         self.__request(ORDER["AGENT_IP"][0])
         time.sleep(self.__read_delay)
@@ -315,7 +307,7 @@ class MicroROS_Robot():
 
     def read_agent_ip_port(self):
         '''
-        读取底板WiFi代理的IP端口
+        agent id 포트  로드함
         '''
         self.__request(ORDER["AGENT_PORT"][0])
         time.sleep(self.__read_delay)
@@ -327,7 +319,7 @@ class MicroROS_Robot():
 
     def read_car_type(self):
         '''
-        读取底板小车类型、代理连接方式。
+        제조사의 제품군과 관련된것 건드리지 말것
         '''
         self.__request(ORDER["CAR_TYPE"][0])
         time.sleep(self.__read_delay)
@@ -344,7 +336,7 @@ class MicroROS_Robot():
 
     def read_ros_domain_id(self):
         '''
-        读取底板ROS DOMAIN ID
+        ROS DOMAIN ID 읽는 함수
         '''
         self.__request(ORDER["DOMAIN_ID"][0])
         time.sleep(self.__read_delay)
@@ -357,7 +349,7 @@ class MicroROS_Robot():
 
     def read_ros_serial_baudrate(self):
         '''
-        读取底板ROS串口通讯波特率
+        위에 셋팅한 시리얼 읽는 함수임
         '''
         self.__request(ORDER["SERIAL_BAUDRATE"][0])
         time.sleep(self.__read_delay)
@@ -369,7 +361,7 @@ class MicroROS_Robot():
     
     def read_ros_namespace(self):
         '''
-        读取底板的ROS命名空间
+        네임스페이스 로드 함수
         '''
         self.__request(ORDER["ROS_NAMESPACE"][0])
         time.sleep(self.__read_delay)
@@ -380,7 +372,7 @@ class MicroROS_Robot():
 
     def read_pwm_servo_offset(self):
         '''
-        读取底板PWM舵机偏差角度
+        서보모터 pwm 값 셋팅함수
         '''
         self.__request(ORDER["SERVO_OFFSET"][0])
         time.sleep(self.__read_delay)
@@ -393,7 +385,7 @@ class MicroROS_Robot():
 
     def read_motor_pid_parm(self):
         '''
-        读取底板电机PID参数
+        모터 pid 셋팅 함수
         '''
         self.__request(ORDER["MOTOR_PID"][0])
         time.sleep(self.__read_delay)
@@ -407,7 +399,7 @@ class MicroROS_Robot():
 
     def read_imu_yaw_pid_parm(self):
         '''
-        读取底板IMU YAW PID参数
+        imu pid 로드 함수
         '''
         self.__request(ORDER["IMU_YAW_PID"][0])
         time.sleep(self.__read_delay)
@@ -422,7 +414,6 @@ class MicroROS_Robot():
 
     def read_version(self):
         '''
-        返回固件版本
         Return the firmware version
         '''
         self.__request(ORDER["FIRMWARE_VERSION"][0])
@@ -493,9 +484,9 @@ if __name__ == '__main__':
     #robot.set_udp_config([192, 168, 2, 103], 8090)
     #robot.set_car_type(robot.CAR_TYPE_COMPUTER)
     robot.set_car_type(robot.CAR_TYPE_RPI5)
-    robot.set_ros_domain_id(20)
+    robot.set_ros_domain_id(20) #사실상 이거랑 아래 네임스페이스만 건들것
     robot.set_ros_serial_baudrate(921600)
-    robot.set_ros_namespace("")
+    robot.set_ros_namespace("") #사실상 이거랑 위에 ros domain 만 건들것
     robot.set_pwm_servo_offset(1, 0)
     robot.set_pwm_servo_offset(2, 0)
     robot.set_motor_pid_parm(1, 0.2, 0.2)
