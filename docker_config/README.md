@@ -27,6 +27,7 @@ sudo usermod -aG docker $user_name
 
 sudo reboot
 ```
+- 재부팅 후에 다시
 
 ```bash
 sudo apt-get update
@@ -72,18 +73,18 @@ sudo udevadm control --reload-rules
 sudo udevadm trigger
 sudo reboot
 ```
--재부팅 후 아래 sh 실행해서 제어기 MCU와 접속 확인할것
+- 재부팅 후 아래 sh 실행해서 제어기 MCU와 접속 확인할것
 
 ```bash
 sh start_agent_rpi5.sh
 ```
--다른 터미널에서 컨테이너 새로 만듦
+- 다른 터미널에서 컨테이너 새로 만듦
 
 ```bash
 sh ros2_humble_docker.sh
 ```
 
--새로 만든 컨테이너 yahbommcar에 카메라 관련 내용 설치
+- 새로 만든 컨테이너 yahbommcar에 카메라 관련 내용 설치
 
 ```bash
 docker exec -it yahboomcar bash
@@ -98,7 +99,7 @@ source ~/.bashrc
 sudo apt install ros-humble-compressed-image-transport
 
 ```
--이후 해당 컨테이너에서 다음과 같이 카메라 노드 실행해야 병목이 없을 것임 구독도 image_raw/compresed로 할것
+- 이후 해당 컨테이너에서 다음과 같이 카메라 노드 실행해야 병목이 없을 것임 구독도 image_raw/compresed로 할것
 
 
 ```bash
@@ -111,7 +112,7 @@ ros2 run usb_cam usb_cam_node_exe --ros-args \
 
 ```
 
--서버에서는 다음과 같은 것을 설치하여 rqt에서 모니터링 할 것
+- 서버에서는 다음과 같은 것을 설치하여 rqt에서 모니터링 할 것
 
 
 ```bash
@@ -129,3 +130,5 @@ sudo apt install --reinstall \
 sudo apt update
 sudo apt install code
 ```
+
+![arona](images/aronaddabong.png)
