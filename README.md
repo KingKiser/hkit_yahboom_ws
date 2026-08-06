@@ -1,7 +1,8 @@
 # hkit_yahboom_ws
 
 > 한국IT교육원 자율주행 피지컬 AI 반 교구제 사용 예제
-> 사용 로봇은 yahboom의 MicroROS-Pi5
+
+> 사용 로봇은 yahboom의 [MicroROS-Pi5](https://www.yahboom.net/study/MicroROS-Pi5)
 
 **Version:** v1  
 **Last Updated:** 2026.08.06  
@@ -11,7 +12,7 @@
 
 ## ✅ Yahboom slam, nav2 패키지
 
-- 기존 공식 사이트에 있는 slam이나 nav는 너무 복잡해서 기본 센서 데이터로만 구현했음 강의용으로 최소한의 셋팅이니 참고하고 slam 셋서 데이터 보정은 알아서
+- 기존 공식 사이트에 있는 slam이나 nav는 너무 복잡해서 기본 센서 데이터로만 구현했음 강의용으로 최소한의 셋팅이니 참고하고 slam 센서 데이터 보정은 알아서
 
 ![joseock](images/joseock.png)
 

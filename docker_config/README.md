@@ -15,6 +15,18 @@
 
 - vnc나 ssh연결 및 기본적인 보드 이미지 설치는 생략합니다
 
+---
+### 팁 라즈베리파이에 vscode를 설치하면 꽤 편하다
+
+```bash
+sudo apt update
+sudo apt install code
+```
+
+![arona](images/aronaddabong.png)
+
+---
+
 ```bash
 sudo apt-get update
 sudo apt-get install \
@@ -30,12 +42,6 @@ sudo reboot
 - 재부팅 후에 다시
 
 ```bash
-sudo apt-get update
-sudo apt-get install \
-    ca-certificates \
-    curl \
-    gnupg \
-    lsb-release
 
 sudo mkdir -p /etc/apt/keyrings
 curl -fsSL https://download.docker.com/linux/debian/gpg | \
@@ -60,14 +66,17 @@ sudo reboot
 ```bash
 python3 config_robot.py
 
-sudo nano /etc/udev/rules.d/99-yahboom.rules
+sudo code /etc/udev/rules.d/99-yahboom.rules
 ```
+- vscode로 99-yahboom.rules를 생성하여 값을 하단의 값을 넣는다
 
 ```bash
 KERNEL=="ttyUSB[0-9]*", MODE="0666"
 KERNEL=="ttyACM[0-9]*", MODE="0666"
 KERNEL=="video[0-9]*", MODE="0666"
 ```
+- 이후 vscode를 이용해 저장 후 해당 rules를 적용한다
+
 ```bash
 sudo udevadm control --reload-rules
 sudo udevadm trigger
@@ -121,14 +130,10 @@ sudo apt install --reinstall \
   ros-humble-rqt-image-view \
   ros-humble-image-transport-plugins
 ```
-
 ---
 
-### 팁 라즈베리파이에 vscode를 설치하면 꽤 편하다
+- rqt 실행 시 카메라 덤프될 경우
 
 ```bash
-sudo apt update
-sudo apt install code
+rqt --clear-config
 ```
-
-![arona](images/aronaddabong.png)
