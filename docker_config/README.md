@@ -66,9 +66,9 @@ sudo reboot
 ```bash
 python3 config_robot.py
 
-sudo code /etc/udev/rules.d/99-yahboom.rules
+sudo nano /etc/udev/rules.d/99-yahboom.rules
 ```
-- vscode로 99-yahboom.rules를 생성하여 값을 하단의 값을 넣는다
+- nano로 99-yahboom.rules를 생성하여 값을 하단의 값을 넣는다
 
 ```bash
 KERNEL=="ttyUSB[0-9]*", MODE="0666"
