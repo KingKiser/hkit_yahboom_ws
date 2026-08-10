@@ -35,14 +35,6 @@ sudo apt-get install \
     gnupg \
     lsb-release
 
-sudo usermod -aG docker $user_name
-
-sudo reboot
-```
-- 재부팅 후에 다시
-
-```bash
-
 sudo mkdir -p /etc/apt/keyrings
 curl -fsSL https://download.docker.com/linux/debian/gpg | \
   sudo gpg --dearmor -o /etc/apt/keyrings/docker.gpg
@@ -57,7 +49,7 @@ echo \
 sudo apt-get update
 sudo apt-get install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
 
-sudo usermod -aG docker $user_name
+sudo usermod -aG docker '$user_name'
 
 sudo reboot
 ```
@@ -75,7 +67,7 @@ KERNEL=="ttyUSB[0-9]*", MODE="0666"
 KERNEL=="ttyACM[0-9]*", MODE="0666"
 KERNEL=="video[0-9]*", MODE="0666"
 ```
-- 이후 vscode를 이용해 저장 후 해당 rules를 적용한다
+- 이후 해당 rules를 적용한다
 
 ```bash
 sudo udevadm control --reload-rules
