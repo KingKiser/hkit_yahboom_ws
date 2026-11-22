@@ -9,6 +9,7 @@
   <author email="leohycho@gamil.com">Leo Cho</author>
 
   <buildtool_depend>ament_cmake</buildtool_depend>
+  <buildtool_depend>ament_cmake_python</buildtool_depend>
 
   <!-- <depend>gazebo_ros_pkgs</depend> -->
   <depend>geometry_msgs</depend>
@@ -17,6 +18,14 @@
   <depend>sensor_msgs</depend>
   <depend>tf2</depend>
   <depend>cartographer_ros</depend>
+  
+  <test_depend>ament_copyright</test_depend>
+  <test_depend>ament_flake8</test_depend>
+  <test_depend>ament_pep257</test_depend>
+  <test_depend>python3-pytest</test_depend>
+  
+  <exec_depend>launch</exec_depend>
+  <exec_depend>launch_ros</exec_depend>
 
   <test_depend>ament_lint_auto</test_depend>
   <test_depend>ament_lint_common</test_depend>

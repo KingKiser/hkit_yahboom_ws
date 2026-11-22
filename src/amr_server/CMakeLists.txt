@@ -13,6 +13,7 @@ find_package(rclcpp REQUIRED)
 find_package(sensor_msgs REQUIRED)
 find_package(tf2 REQUIRED)
 find_package(cartographer_ros REQUIRED)
+find_package(ament_cmake_python REQUIRED)
 
 install(PROGRAMS
   amr_server/odom_tf_broadcaster.py
